@@ -36,8 +36,9 @@ h2 { font-size: 1.3rem; margin: 44px 0 6px; letter-spacing: -0.01em; }
 h2 + p { color: var(--text-secondary); margin: 0 0 16px; max-width: 75ch; }
 h3 { font-size: 1rem; margin: 0 0 2px; }
 .sub { color: var(--text-secondary); font-size: .88rem; margin: 0 0 10px; }
-.card { background: var(--surface-1); border: 1px solid var(--borde); border-radius: 12px; padding: 18px; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+html, body { overflow-x: hidden; }
+.card { overflow-x: auto; background: var(--surface-1); border: 1px solid var(--borde); border-radius: 12px; padding: 18px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 16px; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 24px; }
 .kpi .num { font-size: 1.7rem; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .kpi .txt { color: var(--text-secondary); font-size: .86rem; }
@@ -154,18 +155,23 @@ function svg(tag, attrs, padre) {
   if (padre) padre.appendChild(n);
   return n;
 }
-const W = 520, H = 250, IZQ = 44, DER = 10, ARR = 10, ABA = 28;
+const W = 520, H = 250, IZQ = 56, DER = 10, ARR = 10, ABA = 28;
 function lienzo(cont, max, fmt) {
   const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, $(cont));
   const y = v => ARR + (H - ARR - ABA) * (1 - v / max);
-  for (let i = 0; i <= 4; i++) {
-    const v = max * i / 4;
+  const n = Math.round(max / paso(max));
+  for (let i = 0; i <= n; i++) {
+    const v = max * i / n;
     svg("line", { x1: IZQ, x2: W - DER, y1: y(v), y2: y(v), stroke: "var(--grid)" }, s);
     svg("text", { x: IZQ - 6, y: y(v) + 4, "text-anchor": "end" }, s).textContent = fmt(v);
   }
   return { s, y };
 }
-function techo(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v / p * 2) / 2 * p; }
+function paso(v) {
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  return [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10].map(k => k * p).find(k => Math.ceil(v / k - 1e-9) <= 5);
+}
+function techo(v) { const k = paso(v); return Math.ceil(v / k - 1e-9) * k; }
 function leyenda(cont, items) {
   const d = document.createElement("div"); d.className = "leyenda";
   d.innerHTML = items.map(i => `<span><i style="background:${i[1]}"></i>${i[0]}</span>`).join("");
@@ -176,9 +182,9 @@ function leyenda(cont, items) {
 function barras(cont, etiquetas, valores, fmtEje, tipTexto, cada = 1) {
   const max = techo(Math.max(...valores));
   const { s, y } = lienzo(cont, max, fmtEje);
-  const paso = (W - IZQ - DER) / valores.length, ancho = Math.max(paso - 2, 2);
+  const sep = (W - IZQ - DER) / valores.length, ancho = Math.max(sep - 2, 2);
   valores.forEach((v, i) => {
-    const x = IZQ + i * paso + 1;
+    const x = IZQ + i * sep + 1;
     const r = svg("rect", { x, y: y(v), width: ancho, height: y(0) - y(v), fill: "var(--series-1)", rx: Math.min(4, ancho / 2) }, s);
     conTip(r, tipTexto(i));
     if (i % cada === 0) svg("text", { x: x + ancho / 2, y: H - 9, "text-anchor": "middle" }, s).textContent = etiquetas[i];
@@ -206,16 +212,16 @@ function lineas(cont, series, fmtEje) {
 function apiladas(cont) {
   leyenda(cont, NIVELES.map(n => [nombre(n), COLOR_NIVEL[n]]));
   const { s, y } = lienzo(cont, 1, v => num(v * 100) + " %");
-  const paso = (W - IZQ - DER) / 24;
+  const sep = (W - IZQ - DER) / 24;
   for (let h = 0; h < 24; h++) {
     let base = 0;
     NIVELES.forEach(n => {
       const v = M.nivel_por_hora[n][h];
-      svg("rect", { x: IZQ + h * paso + 1, y: y(base + v) + 1, width: paso - 2, height: Math.max(y(base) - y(base + v) - 2, 0), fill: COLOR_NIVEL[n] }, s);
+      svg("rect", { x: IZQ + h * sep + 1, y: y(base + v) + 1, width: sep - 2, height: Math.max(y(base) - y(base + v) - 2, 0), fill: COLOR_NIVEL[n] }, s);
       base += v;
     });
-    if (h % 3 === 0) svg("text", { x: IZQ + h * paso + paso / 2, y: H - 9, "text-anchor": "middle" }, s).textContent = h + "h";
-    const z = svg("rect", { x: IZQ + h * paso, y: ARR, width: paso, height: H - ARR - ABA, fill: "transparent" }, s);
+    if (h % 3 === 0) svg("text", { x: IZQ + h * sep + sep / 2, y: H - 9, "text-anchor": "middle" }, s).textContent = h + "h";
+    const z = svg("rect", { x: IZQ + h * sep, y: ARR, width: sep, height: H - ARR - ABA, fill: "transparent" }, s);
     conTip(z, `<b>${h}:00</b><br>` + NIVELES.map(n => `${nombre(n)}: ${pct(M.nivel_por_hora[n][h])}`).join("<br>"));
   }
 }

@@ -19,7 +19,7 @@ Proyecto final de Minería de Datos. Clasifica la velocidad del viento en Medell
 | Quitar nulos | 1.986.848 | 0 |
 | Quitar duplicados exactos | 1.866.351 | 120.497 |
 | Una medición por estación y momento | 1.770.694 | 95.657 |
-| Quitar valores atípicos (negativos o mayores a 30 m/s) | 1.770.633 | 61 |
+| Quitar valores atípicos (negativos o mayores a 30 m/s) | 1.770.632 | 62 |
 
 Además se pasaron los textos a mayúsculas (había "ANTIOQUIA" y "Antioquia") y se unificó el nombre
 de cada estación con su código, porque una misma estación aparecía hasta con tres nombres.
@@ -29,8 +29,8 @@ de cada estación con su código, porque una misma estación aparecía hasta con
 - Variables: hora del día, mes y estación.
 - Clases según la escala de Beaufort: BAJO (hasta 1,5 m/s), MEDIO (hasta 3,3 m/s) y ALTO (más de 3,3 m/s).
 - `CategoricalNB` de scikit-learn, 70 % para entrenar y 30 % para probar.
-- Exactitud: 51,6 %. Si siempre se predijera BAJO, que es la clase más común, se acertaría el 44,0 %.
-- El día de la semana no mejora el modelo (51,6 %), por eso no se usa.
+- Precisión: 51,5 %. Si siempre se predijera BAJO, que es la clase más común, se acertaría el 44,0 %.
+- El día de la semana no mejora el modelo (51,5 %), por eso no se usa.
 
 El conjunto de datos solo trae la fecha, la estación y la velocidad. El viento también depende de la
 temperatura, la presión y la humedad, que no están en estos datos, y por eso la exactitud es moderada.
