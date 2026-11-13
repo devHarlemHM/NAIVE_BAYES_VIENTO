@@ -9,66 +9,55 @@
   color-scheme: light;
   --fondo: #f4f5f3; --surface-1: #fcfcfb; --borde: #dfe0dc;
   --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
-  --grid: #e6e6e2;
-  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --grid: #e6e6e2; --series-1: #2a78d6; --marca: #0b0b0b;
   --nivel-bajo: #a9cdf2; --nivel-medio: #2a78d6; --nivel-alto: #0d3b78;
-  --celda: 42, 120, 214;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --fondo: #111110; --surface-1: #1a1a19; --borde: #33332f;
     --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-    --grid: #2b2b28;
-    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+    --grid: #2b2b28; --series-1: #3987e5; --marca: #f0efec;
     --nivel-bajo: #1d4f8f; --nivel-medio: #3987e5; --nivel-alto: #b5d5f7;
-    --celda: 57, 135, 229;
   }
 }
 * { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
 body { margin: 0; background: var(--fondo); color: var(--text-primary);
   font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
-header h1 { font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.02em; }
-header p { color: var(--text-secondary); max-width: 70ch; margin: 0; }
+main { max-width: 980px; margin: 0 auto; padding: 32px 20px 56px; }
 .etiqueta { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-h2 { font-size: 1.3rem; margin: 44px 0 6px; letter-spacing: -0.01em; }
-h2 + p { color: var(--text-secondary); margin: 0 0 16px; max-width: 75ch; }
-h3 { font-size: 1rem; margin: 0 0 2px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+header p { color: var(--text-secondary); max-width: 68ch; margin: 0 0 24px; }
+h2 { font-size: 1rem; margin: 0 0 2px; }
 .sub { color: var(--text-secondary); font-size: .88rem; margin: 0 0 10px; }
-html, body { overflow-x: hidden; }
-.card { overflow-x: auto; background: var(--surface-1); border: 1px solid var(--borde); border-radius: 12px; padding: 18px; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 16px; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 24px; }
-.kpi .num { font-size: 1.7rem; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.kpi .txt { color: var(--text-secondary); font-size: .86rem; }
-.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.card { background: var(--surface-1); border: 1px solid var(--borde); border-radius: 12px; padding: 18px; margin-bottom: 16px; overflow-x: auto; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 16px; }
+.grid2 .card { margin-bottom: 0; }
+.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
 label { display: block; font-size: .85rem; color: var(--text-secondary); margin-bottom: 4px; }
 select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--borde);
   background: var(--fondo); color: var(--text-primary); font: inherit; }
 select:focus-visible, summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
-.resultado { font-size: 1.15rem; margin: 0 0 14px; }
-.resultado b { font-size: 1.5rem; }
-.fila { display: grid; grid-template-columns: 62px 1fr 64px; align-items: center; gap: 10px; margin: 8px 0; font-variant-numeric: tabular-nums; }
-.pista { height: 22px; background: var(--grid); border-radius: 4px; overflow: hidden; }
+.resultado { font-size: 1.1rem; margin: 0 0 14px; }
+.resultado b { font-size: 1.7rem; letter-spacing: -0.01em; }
+.fila { display: grid; grid-template-columns: 62px 1fr 64px; align-items: center; gap: 10px; margin: 9px 0; font-variant-numeric: tabular-nums; }
+.pista { height: 26px; background: var(--grid); border-radius: 4px; overflow: hidden; }
 .pista div { height: 100%; border-radius: 0 4px 4px 0; transition: width .25s; }
 .fila span:last-child { text-align: right; font-weight: 600; }
-details { margin-top: 12px; font-size: .88rem; color: var(--text-secondary); }
+details { margin-top: 14px; font-size: .88rem; color: var(--text-secondary); }
 summary { cursor: pointer; color: var(--text-primary); }
-table { border-collapse: collapse; width: 100%; font-size: .88rem; font-variant-numeric: tabular-nums; }
-th, td { padding: 7px 9px; text-align: right; border-bottom: 1px solid var(--borde); }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--borde); }
 th:first-child, td:first-child { text-align: left; }
 th { color: var(--text-secondary); font-weight: 600; }
-.matriz td { text-align: center; border: 2px solid var(--surface-1); }
-.matriz td small { display: block; color: var(--text-secondary); }
 svg { width: 100%; height: auto; display: block; }
 svg text { fill: var(--text-secondary); font-size: 12px; }
 .leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .85rem; color: var(--text-secondary); margin-bottom: 6px; }
 .leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
 #tip { position: fixed; pointer-events: none; background: var(--text-primary); color: var(--surface-1);
-  padding: 6px 9px; border-radius: 6px; font-size: .82rem; display: none; z-index: 5; max-width: 240px; }
-.nota { border-left: 3px solid var(--series-1); padding: 4px 0 4px 14px; color: var(--text-secondary); max-width: 80ch; }
-footer { margin-top: 48px; color: var(--text-muted); font-size: .85rem; }
+  padding: 6px 9px; border-radius: 6px; font-size: .82rem; display: none; z-index: 5; }
+footer { margin-top: 28px; color: var(--text-muted); font-size: .85rem; }
 a { color: var(--series-1); }
 </style>
 </head>
@@ -77,54 +66,32 @@ a { color: var(--series-1); }
 <header>
   <div class="etiqueta">Proyecto final · Minería de Datos · Universidad Libre</div>
   <h1>¿Qué tan fuerte sopla el viento en Medellín?</h1>
-  <p>Clasificamos la velocidad del viento en tres niveles (bajo, medio y alto) con un modelo Naive Bayes
-  entrenado con las mediciones de cuatro estaciones del IDEAM publicadas en datos.gov.co.</p>
+  <p>Escoge una hora, un mes y una estación. El modelo Naive Bayes calcula qué tan probable es que el viento
+  esté bajo, medio o alto, y las gráficas se actualizan con cada cambio.</p>
 </header>
 
-<section class="kpis" id="kpis"></section>
-
-<h2>Prueba el modelo</h2>
-<p>Elige una hora, un mes y una estación. La página calcula la probabilidad de cada nivel de viento con las
-tablas que aprendió el modelo.</p>
 <div class="card">
   <div class="form">
     <div><label for="hora">Hora del día</label><select id="hora"></select></div>
     <div><label for="mes">Mes</label><select id="mes"></select></div>
     <div><label for="estacion">Estación</label><select id="estacion"></select></div>
   </div>
+</div>
+
+<div class="card">
   <p class="resultado" id="resultado"></p>
   <div id="barras"></div>
   <details><summary>Ver cómo se calcula</summary><div id="calculo"></div></details>
 </div>
 
-<h2>Limpieza de los datos</h2>
-<p>El archivo original venía con registros repetidos, textos escritos de varias formas y algunos valores
-imposibles. Esta tabla muestra cuántas filas quedaron después de cada paso.</p>
-<div class="card"><table id="limpieza"></table></div>
-
-<h2>Cómo se comporta el viento</h2>
-<p>Estas gráficas salen de los datos ya limpios. La hora del día es lo que más cambia la velocidad del viento.</p>
 <div class="grid2">
-  <div class="card"><h3>Velocidad promedio por hora</h3><p class="sub">m/s, por estación</p><div id="g-hora"></div></div>
-  <div class="card"><h3>Nivel de viento según la hora</h3><p class="sub">porcentaje de mediciones en cada nivel</p><div id="g-nivel"></div></div>
-  <div class="card"><h3>Velocidad promedio por mes</h3><p class="sub">m/s</p><div id="g-mes"></div></div>
-  <div class="card"><h3>Distribución de la velocidad</h3><p class="sub">cantidad de mediciones por rango de 0,5 m/s</p><div id="g-hist"></div></div>
+  <div class="card"><h2>Predicción durante el día</h2><p class="sub" id="sub-hora"></p><div id="g-hora"></div></div>
+  <div class="card"><h2>Predicción durante el año</h2><p class="sub" id="sub-mes"></p><div id="g-mes"></div></div>
 </div>
 
-<h2>Qué tan bien clasifica</h2>
-<p id="texto-eval"></p>
-<div class="grid2">
-  <div class="card"><h3>Matriz de confusión</h3><p class="sub">filas: nivel real · columnas: nivel que predijo el modelo</p><table class="matriz" id="matriz"></table></div>
-  <div class="card"><h3>Resultados por nivel</h3><p class="sub">sobre los datos de prueba (30 %)</p><table id="reporte"></table></div>
-</div>
-
-<h2>Lo que el modelo no puede ver</h2>
-<p class="nota">El viento también depende de la temperatura, la presión, la humedad y la lluvia, pero este conjunto
-de datos solo trae la fecha, la estación y la velocidad. Por eso el modelo aprende patrones generales (a qué
-horas y en qué meses suele ventear más) y no puede acertar una medición puntual. Los niveles se definieron con
-la escala de Beaufort: bajo hasta 1,5 m/s, medio hasta 3,3 m/s y alto por encima de 3,3 m/s.</p>
-
-<footer id="pie"></footer>
+<footer>Niveles según la escala de Beaufort: bajo hasta 1,5 m/s, medio hasta 3,3 m/s y alto por encima de 3,3 m/s.
+Datos: <a href="https://www.datos.gov.co/Ambiente-y-Desarrollo-Sostenible/Velocidad-del-Viento/sgfv-3yp8">Velocidad del Viento, datos.gov.co</a>.
+Código: <a href="https://github.com/devHarlemHM/NAIVE_BAYES_VIENTO">repositorio en GitHub</a>.</footer>
 </main>
 <div id="tip"></div>
 
@@ -132,176 +99,96 @@ la escala de Beaufort: bajo hasta 1,5 m/s, medio hasta 3,3 m/s y alto por encima
 <script>
 const M = MODELO;
 const NIVELES = ["BAJO", "MEDIO", "ALTO"];
-const COLOR_NIVEL = { BAJO: "var(--nivel-bajo)", MEDIO: "var(--nivel-medio)", ALTO: "var(--nivel-alto)" };
-const COLOR_EST = ["var(--series-1)", "var(--series-2)", "var(--series-3)", "var(--series-4)"];
+const COLOR = { BAJO: "var(--nivel-bajo)", MEDIO: "var(--nivel-medio)", ALTO: "var(--nivel-alto)" };
 const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const num = (x, d = 0) => x.toLocaleString("es-CO", { minimumFractionDigits: d, maximumFractionDigits: d });
 const pct = (x, d = 1) => num(x * 100, d) + " %";
 const nombre = s => s.charAt(0) + s.slice(1).toLowerCase().replace(/ (.)/g, (m, c) => " " + c.toUpperCase());
 const $ = id => document.getElementById(id);
-
-/* ---------- tooltip ---------- */
 const tip = $("tip");
-function conTip(nodo, html) {
-  nodo.addEventListener("mousemove", e => {
-    tip.innerHTML = html; tip.style.display = "block";
-    tip.style.left = Math.min(e.clientX + 12, innerWidth - 250) + "px"; tip.style.top = (e.clientY + 14) + "px";
-  });
-  nodo.addEventListener("mouseleave", () => tip.style.display = "none");
-}
-function svg(tag, attrs, padre) {
-  const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  for (const k in attrs) n.setAttribute(k, attrs[k]);
-  if (padre) padre.appendChild(n);
-  return n;
-}
-const W = 520, H = 250, IZQ = 56, DER = 10, ARR = 10, ABA = 28;
-function lienzo(cont, max, fmt) {
-  const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, $(cont));
-  const y = v => ARR + (H - ARR - ABA) * (1 - v / max);
-  const n = Math.round(max / paso(max));
-  for (let i = 0; i <= n; i++) {
-    const v = max * i / n;
-    svg("line", { x1: IZQ, x2: W - DER, y1: y(v), y2: y(v), stroke: "var(--grid)" }, s);
-    svg("text", { x: IZQ - 6, y: y(v) + 4, "text-anchor": "end" }, s).textContent = fmt(v);
-  }
-  return { s, y };
-}
-function paso(v) {
-  const p = Math.pow(10, Math.floor(Math.log10(v)));
-  return [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10].map(k => k * p).find(k => Math.ceil(v / k - 1e-9) <= 5);
-}
-function techo(v) { const k = paso(v); return Math.ceil(v / k - 1e-9) * k; }
-function leyenda(cont, items) {
-  const d = document.createElement("div"); d.className = "leyenda";
-  d.innerHTML = items.map(i => `<span><i style="background:${i[1]}"></i>${i[0]}</span>`).join("");
-  $(cont).appendChild(d);
-}
 
-/* ---------- barras ---------- */
-function barras(cont, etiquetas, valores, fmtEje, tipTexto, cada = 1) {
-  const max = techo(Math.max(...valores));
-  const { s, y } = lienzo(cont, max, fmtEje);
-  const sep = (W - IZQ - DER) / valores.length, ancho = Math.max(sep - 2, 2);
-  valores.forEach((v, i) => {
-    const x = IZQ + i * sep + 1;
-    const r = svg("rect", { x, y: y(v), width: ancho, height: y(0) - y(v), fill: "var(--series-1)", rx: Math.min(4, ancho / 2) }, s);
-    conTip(r, tipTexto(i));
-    if (i % cada === 0) svg("text", { x: x + ancho / 2, y: H - 9, "text-anchor": "middle" }, s).textContent = etiquetas[i];
-  });
-}
-
-/* ---------- líneas ---------- */
-function lineas(cont, series, fmtEje) {
-  leyenda(cont, series.map(x => [x.nombre, x.color]));
-  const max = techo(Math.max(...series.flatMap(x => x.valores.filter(v => v != null))));
-  const { s, y } = lienzo(cont, max, fmtEje);
-  const n = series[0].valores.length, x = i => IZQ + (W - IZQ - DER) * i / (n - 1);
-  series.forEach(se => {
-    const d = se.valores.map((v, i) => v == null ? "" : `${i && se.valores[i - 1] != null ? "L" : "M"}${x(i)},${y(v)}`).join("");
-    svg("path", { d, fill: "none", stroke: se.color, "stroke-width": 2, "stroke-linejoin": "round" }, s);
-  });
-  for (let i = 0; i < n; i++) {
-    if (i % 3 === 0) svg("text", { x: x(i), y: H - 9, "text-anchor": "middle" }, s).textContent = i + "h";
-    const z = svg("rect", { x: x(i) - (W - IZQ - DER) / n / 2, y: ARR, width: (W - IZQ - DER) / n, height: H - ARR - ABA, fill: "transparent" }, s);
-    conTip(z, `<b>${i}:00</b><br>` + series.map(se => `${se.nombre}: ${se.valores[i] == null ? "sin datos" : num(se.valores[i], 2) + " m/s"}`).join("<br>"));
-  }
-}
-
-/* ---------- apiladas al 100 % ---------- */
-function apiladas(cont) {
-  leyenda(cont, NIVELES.map(n => [nombre(n), COLOR_NIVEL[n]]));
-  const { s, y } = lienzo(cont, 1, v => num(v * 100) + " %");
-  const sep = (W - IZQ - DER) / 24;
-  for (let h = 0; h < 24; h++) {
-    let base = 0;
-    NIVELES.forEach(n => {
-      const v = M.nivel_por_hora[n][h];
-      svg("rect", { x: IZQ + h * sep + 1, y: y(base + v) + 1, width: sep - 2, height: Math.max(y(base) - y(base + v) - 2, 0), fill: COLOR_NIVEL[n] }, s);
-      base += v;
-    });
-    if (h % 3 === 0) svg("text", { x: IZQ + h * sep + sep / 2, y: H - 9, "text-anchor": "middle" }, s).textContent = h + "h";
-    const z = svg("rect", { x: IZQ + h * sep, y: ARR, width: sep, height: H - ARR - ABA, fill: "transparent" }, s);
-    conTip(z, `<b>${h}:00</b><br>` + NIVELES.map(n => `${nombre(n)}: ${pct(M.nivel_por_hora[n][h])}`).join("<br>"));
-  }
-}
-
-/* ---------- predicción ---------- */
+/* Naive Bayes: P(nivel) x P(hora|nivel) x P(mes|nivel) x P(estación|nivel), y se divide entre la suma */
 function predecir(h, m, e) {
   const crudo = {}, partes = {};
   M.clases.forEach((c, i) => {
     partes[c] = [M.prob_clase[i], M.prob_hora[i][h], M.prob_mes[i][m], M.prob_estacion[i][e]];
     crudo[c] = partes[c].reduce((a, b) => a * b, 1);
   });
-  const total = Object.values(crudo).reduce((a, b) => a + b, 0);
+  const total = NIVELES.reduce((a, c) => a + crudo[c], 0);
   const prob = {}; NIVELES.forEach(c => prob[c] = crudo[c] / total);
-  return { prob, partes, crudo, total };
+  return { prob, partes, crudo };
 }
+
+function svg(tag, attrs, padre) {
+  const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (padre) padre.appendChild(n);
+  return n;
+}
+
+/* Barras apiladas al 100 %: una por hora o por mes, con la seleccionada marcada */
+function apiladas(cont, datos, etiquetas, elegido, cada, alElegir) {
+  const W = 520, H = 250, IZQ = 44, DER = 8, ARR = 22, ABA = 26;
+  const caja = $(cont); caja.innerHTML = "";
+  const ley = document.createElement("div"); ley.className = "leyenda";
+  ley.innerHTML = NIVELES.map(n => `<span><i style="background:${COLOR[n]}"></i>${nombre(n)}</span>`).join("");
+  caja.appendChild(ley);
+  const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, caja);
+  const y = v => ARR + (H - ARR - ABA) * (1 - v);
+  for (let i = 0; i <= 4; i++) {
+    svg("line", { x1: IZQ, x2: W - DER, y1: y(i / 4), y2: y(i / 4), stroke: "var(--grid)" }, s);
+    svg("text", { x: IZQ - 6, y: y(i / 4) + 4, "text-anchor": "end" }, s).textContent = i * 25 + " %";
+  }
+  const sep = (W - IZQ - DER) / datos.length;
+  datos.forEach((p, i) => {
+    let base = 0;
+    NIVELES.forEach(n => {
+      svg("rect", { x: IZQ + i * sep + 1, y: y(base + p[n]) + 1, width: sep - 2, height: Math.max(y(base) - y(base + p[n]) - 2, 0),
+        fill: COLOR[n], opacity: i === elegido ? 1 : 0.55 }, s);
+      base += p[n];
+    });
+    if (i % cada === 0 || i === elegido) svg("text", { x: IZQ + i * sep + sep / 2, y: H - 8, "text-anchor": "middle",
+      "font-weight": i === elegido ? 700 : 400 }, s).textContent = etiquetas[i];
+    if (i === elegido) {
+      svg("rect", { x: IZQ + i * sep, y: y(1) - 1, width: sep, height: y(0) - y(1) + 2, fill: "none", stroke: "var(--marca)", "stroke-width": 2, rx: 2 }, s);
+      svg("path", { d: `M${IZQ + i * sep + sep / 2 - 5},${ARR - 12} l10,0 l-5,7 z`, fill: "var(--marca)" }, s);
+    }
+    const z = svg("rect", { x: IZQ + i * sep, y: ARR, width: sep, height: H - ARR - ABA, fill: "transparent", style: "cursor:pointer" }, s);
+    z.addEventListener("mousemove", ev => {
+      tip.innerHTML = `<b>${etiquetas[i]}</b><br>` + NIVELES.map(n => `${nombre(n)}: ${pct(p[n])}`).join("<br>");
+      tip.style.display = "block"; tip.style.left = Math.min(ev.clientX + 12, innerWidth - 150) + "px"; tip.style.top = (ev.clientY + 14) + "px";
+    });
+    z.addEventListener("mouseleave", () => tip.style.display = "none");
+    z.addEventListener("click", () => { tip.style.display = "none"; alElegir(i); });
+  });
+}
+
 function actualizar() {
   const h = +$("hora").value, m = +$("mes").value, e = +$("estacion").value;
   const r = predecir(h, m, e);
   const mejor = NIVELES.reduce((a, b) => r.prob[a] >= r.prob[b] ? a : b);
   $("resultado").innerHTML = `Nivel de viento más probable: <b>${nombre(mejor)}</b> (${pct(r.prob[mejor])})`;
   $("barras").innerHTML = NIVELES.map(c => `<div class="fila"><span>${nombre(c)}</span>
-    <div class="pista"><div style="width:${r.prob[c] * 100}%;background:${COLOR_NIVEL[c]}"></div></div><span>${pct(r.prob[c])}</span></div>`).join("");
+    <div class="pista"><div style="width:${r.prob[c] * 100}%;background:${COLOR[c]}"></div></div><span>${pct(r.prob[c])}</span></div>`).join("");
   $("calculo").innerHTML = `<p>Naive Bayes multiplica la probabilidad de cada nivel por la probabilidad de ver esa hora,
     ese mes y esa estación cuando el viento está en ese nivel. Después divide entre la suma para que todo dé 100 %.</p>
-    <table><tr><th>Nivel</th><th>P(nivel)</th><th>P(hora | nivel)</th><th>P(mes | nivel)</th><th>P(estación | nivel)</th><th>Producto</th><th>Probabilidad</th></tr>` +
-    NIVELES.map(c => `<tr><td>${nombre(c)}</td>${r.partes[c].map(p => `<td>${num(p, 4)}</td>`).join("")}<td>${r.crudo[c].toExponential(2)}</td><td>${pct(r.prob[c])}</td></tr>`).join("") + "</table>";
+    <table><tr><th>Nivel</th><th>P(nivel)</th><th>P(hora | nivel)</th><th>P(mes | nivel)</th><th>P(estación | nivel)</th><th>Probabilidad</th></tr>` +
+    NIVELES.map(c => `<tr><td>${nombre(c)}</td>${r.partes[c].map(p => `<td>${num(p, 4)}</td>`).join("")}<td>${pct(r.prob[c])}</td></tr>`).join("") + "</table>";
+
+  const est = nombre(M.estaciones[e]);
+  $("sub-hora").textContent = `${MESES[m]} en ${est}. Toca una hora para elegirla.`;
+  $("sub-mes").textContent = `A las ${h}:00 en ${est}. Toca un mes para elegirlo.`;
+  apiladas("g-hora", [...Array(24)].map((_, i) => predecir(i, m, e).prob), [...Array(24)].map((_, i) => i + "h"), h, 3,
+    i => { $("hora").value = i; actualizar(); });
+  apiladas("g-mes", MESES.map((_, i) => predecir(h, i, e).prob), MESES.map(x => x.slice(0, 3)), m, 1,
+    i => { $("mes").value = i; actualizar(); });
 }
 
-/* ---------- armar la página ---------- */
-const L = M.limpieza;
-$("kpis").innerHTML = [
-  [num(L.iniciales), "registros originales"],
-  [num(L.sin_atipicos), "registros después de la limpieza"],
-  [num(M.velocidad_media, 2) + " m/s", "velocidad promedio"],
-  [pct(M.exactitud), "exactitud del modelo"]
-].map(k => `<div class="card kpi"><div class="num">${k[0]}</div><div class="txt">${k[1]}</div></div>`).join("");
-
-for (let h = 0; h < 24; h++) $("hora").add(new Option(h + ":00", h, false, h === 14));
+for (let h = 0; h < 24; h++) $("hora").add(new Option(h + ":00", h, false, h === 15));
 MESES.forEach((m, i) => $("mes").add(new Option(m, i, false, i === 7)));
 M.estaciones.forEach((e, i) => $("estacion").add(new Option(nombre(e), i)));
 ["hora", "mes", "estacion"].forEach(id => $(id).addEventListener("change", actualizar));
 actualizar();
-
-const pasos = [
-  ["Datos originales", L.iniciales, "Dos hojas de Excel unidas en una sola tabla"],
-  ["Quitar nulos", L.sin_nulos, "Filas sin fecha, sin velocidad o sin estación"],
-  ["Quitar duplicados exactos", L.sin_duplicados, "Filas idénticas en todas las columnas"],
-  ["Una medición por estación y momento", L.sin_repetidas, "Olaya Herrera tiene dos sensores que a veces miden a la vez"],
-  ["Quitar valores atípicos", L.sin_atipicos, "Velocidades negativas o mayores a 30 m/s (errores del sensor)"]
-];
-$("limpieza").innerHTML = "<tr><th>Paso</th><th>Filas que quedan</th><th>Eliminadas</th><th style='text-align:left'>Qué se hizo</th></tr>" +
-  pasos.map((p, i) => `<tr><td>${p[0]}</td><td>${num(p[1])}</td><td>${i ? num(pasos[i - 1][1] - p[1]) : "—"}</td><td style="text-align:left;color:var(--text-secondary)">${p[2]}</td></tr>`).join("") +
-  `<tr><td colspan="4" style="text-align:left;color:var(--text-secondary);border:0">Además se pasaron los textos a mayúsculas
-  (había "ANTIOQUIA" y "Antioquia") y se unificó el nombre de cada estación con su código, porque una misma estación aparecía hasta con tres nombres.</td></tr>`;
-
-lineas("g-hora", M.estaciones.filter(e => M.hora_estacion[e]).map((e, i) => ({ nombre: nombre(e), color: COLOR_EST[M.estaciones.indexOf(e)], valores: M.hora_estacion[e] })), v => num(v, 1));
-apiladas("g-nivel");
-barras("g-mes", MESES.map(m => m.slice(0, 3)), M.promedio_mes, v => num(v, 1), i => `<b>${MESES[i]}</b><br>${num(M.promedio_mes[i], 2)} m/s`);
-barras("g-hist", M.histograma.map((_, i) => num(i * 0.5)), M.histograma, v => v >= 1000 ? num(v / 1000) + " mil" : num(v),
-  i => `<b>${num(i * 0.5, 1)} a ${num(i * 0.5 + 0.5, 1)} m/s</b><br>${num(M.histograma[i])} mediciones`, 4);
-
-const mejora = (M.exactitud - M.exactitud_base) * 100;
-$("texto-eval").innerHTML = `El modelo acierta el <b>${pct(M.exactitud)}</b> de las ${num(M.prueba)} mediciones de prueba.
-  Si siempre se respondiera "${nombre(M.clase_comun)}", que es el nivel más común, se acertaría el ${pct(M.exactitud_base)}:
-  el modelo mejora esa base en ${num(mejora, 1)} puntos. Al agregar el día de la semana la exactitud queda en ${pct(M.exactitud_con_dia)},
-  así que esa variable no aporta y se dejó por fuera.`;
-
-$("matriz").innerHTML = "<tr><th></th>" + NIVELES.map(n => `<th style="text-align:center">${nombre(n)}</th>`).join("") + "</tr>" +
-  M.matriz.map((fila, i) => {
-    const t = fila.reduce((a, b) => a + b, 0);
-    return `<tr><th style="text-align:left">${nombre(NIVELES[i])}</th>` + fila.map(v =>
-      `<td style="background:rgba(var(--celda),${(v / t * 0.55).toFixed(3)})">${pct(v / t, 0)}<small>${num(v)}</small></td>`).join("") + "</tr>";
-  }).join("");
-
-$("reporte").innerHTML = "<tr><th>Nivel</th><th>Precisión</th><th>Recall</th><th>F1</th><th>Casos</th></tr>" +
-  NIVELES.map(n => { const r = M.reporte[n]; return `<tr><td>${nombre(n)}</td><td>${pct(r.precision)}</td><td>${pct(r.recall)}</td><td>${pct(r["f1-score"])}</td><td>${num(r.support)}</td></tr>`; }).join("");
-
-$("pie").innerHTML = `Datos: <a href="https://www.datos.gov.co/Ambiente-y-Desarrollo-Sostenible/Velocidad-del-Viento/sgfv-3yp8">Velocidad del Viento, datos.gov.co</a>,
-  municipio de Medellín, mediciones del ${M.fecha_min.slice(0, 10)} al ${M.fecha_max.slice(0, 10)}.
-  Modelo: CategoricalNB de scikit-learn, 70 % entrenamiento y 30 % prueba.`;
 </script>
 </body>
 </html>

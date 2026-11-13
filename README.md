@@ -37,6 +37,11 @@ temperatura, la presión y la humedad, que no están en estos datos, y por eso l
 
 ## Archivos
 
-- `index.html`: página con las gráficas y el formulario para probar el modelo.
+- `index.html`: página para probar el modelo. Se escoge hora, mes y estación, y las gráficas de la predicción se actualizan.
 - `modelo.js`: tablas de probabilidad que exporta el código de Python.
-- `VIENTO_MEDELLIN_NAIVE_BAYES.ipynb`: código con la limpieza, las gráficas y el modelo.
+- `naive_bayes_viento_medellin.py` y `VIENTO_MEDELLIN_NAIVE_BAYES.ipynb`: código con la limpieza, las gráficas y el modelo.
+- Cuaderno en Google Colab: https://colab.research.google.com/drive/1i134gmAOEitXlUY969o_0tnuBX78Vf-v
+
+## Autores
+
+Harlem Josué Hernández Marún y Juan Camilo De Hoyos Batista.
