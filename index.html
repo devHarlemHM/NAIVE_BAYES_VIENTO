@@ -3,96 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Viento en Medellín con Naive Bayes</title>
+<title>Predicción del viento en Medellín</title>
 <style>
 :root {
-  color-scheme: light;
-  --fondo: #f4f5f3; --surface-1: #fcfcfb; --borde: #dfe0dc;
-  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
-  --grid: #e6e6e2; --series-1: #2a78d6; --marca: #0b0b0b;
-  --nivel-bajo: #a9cdf2; --nivel-medio: #2a78d6; --nivel-alto: #0d3b78;
+  color-scheme: dark;
+  --fondo: #0d0f12; --panel: #16191e; --panel-2: #1d2127; --borde: #2a2f37;
+  --text-primary: #f0efec; --text-secondary: #b9bcc2; --text-muted: #80858e;
+  --grid: #2a2f37; --acento: #3987e5; --marca: #ffffff;
+  --nivel-bajo: #1d4f8f; --nivel-medio: #3987e5; --nivel-alto: #b5d5f7;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    color-scheme: dark;
-    --fondo: #111110; --surface-1: #1a1a19; --borde: #33332f;
-    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-    --grid: #2b2b28; --series-1: #3987e5; --marca: #f0efec;
-    --nivel-bajo: #1d4f8f; --nivel-medio: #3987e5; --nivel-alto: #b5d5f7;
+    color-scheme: light;
+    --fondo: #eef0f2; --panel: #ffffff; --panel-2: #f4f5f7; --borde: #dcdfe4;
+    --text-primary: #0b0b0b; --text-secondary: #4d5158; --text-muted: #7b808a;
+    --grid: #e4e6ea; --acento: #2a78d6; --marca: #0b0b0b;
+    --nivel-bajo: #a9cdf2; --nivel-medio: #2a78d6; --nivel-alto: #0d3b78;
   }
 }
 * { box-sizing: border-box; }
-html, body { overflow-x: hidden; }
-body { margin: 0; background: var(--fondo); color: var(--text-primary);
-  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-main { max-width: 980px; margin: 0 auto; padding: 32px 20px 56px; }
-.etiqueta { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
-header p { color: var(--text-secondary); max-width: 68ch; margin: 0 0 24px; }
-h2 { font-size: 1rem; margin: 0 0 2px; }
-.sub { color: var(--text-secondary); font-size: .88rem; margin: 0 0 10px; }
-.card { background: var(--surface-1); border: 1px solid var(--borde); border-radius: 12px; padding: 18px; margin-bottom: 16px; overflow-x: auto; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 16px; }
-.grid2 .card { margin-bottom: 0; }
-.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
-label { display: block; font-size: .85rem; color: var(--text-secondary); margin-bottom: 4px; }
-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--borde);
-  background: var(--fondo); color: var(--text-primary); font: inherit; }
-select:focus-visible, summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
-.resultado { font-size: 1.1rem; margin: 0 0 14px; }
-.resultado b { font-size: 1.7rem; letter-spacing: -0.01em; }
-.fila { display: grid; grid-template-columns: 62px 1fr 64px; align-items: center; gap: 10px; margin: 9px 0; font-variant-numeric: tabular-nums; }
-.pista { height: 26px; background: var(--grid); border-radius: 4px; overflow: hidden; }
-.pista div { height: 100%; border-radius: 0 4px 4px 0; transition: width .25s; }
-.fila span:last-child { text-align: right; font-weight: 600; }
-details { margin-top: 14px; font-size: .88rem; color: var(--text-secondary); }
-summary { cursor: pointer; color: var(--text-primary); }
-table { border-collapse: collapse; width: 100%; font-size: .86rem; font-variant-numeric: tabular-nums; }
+html, body { margin: 0; overflow-x: hidden; }
+body { background: var(--fondo); color: var(--text-primary); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px;
+  background: var(--panel); border-bottom: 1px solid var(--borde); }
+.barra h1 { font-size: 1.05rem; margin: 0; letter-spacing: -0.01em; }
+.barra span { color: var(--text-muted); font-size: .82rem; }
+.app { display: grid; grid-template-columns: 270px 1fr; gap: 16px; padding: 16px 20px 28px; max-width: 1500px; margin: 0 auto; }
+.panel { background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 16px; min-width: 0; }
+.lado { align-self: start; position: sticky; top: 16px; }
+.lado h2, .panel h2 { font-size: .78rem; letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 10px; font-weight: 600; }
+.campo { margin-bottom: 20px; }
+.campo label { display: flex; justify-content: space-between; font-size: .85rem; color: var(--text-secondary); margin-bottom: 8px; }
+.campo label b { color: var(--text-primary); font-size: 1rem; }
+input[type=range] { width: 100%; accent-color: var(--acento); }
+.opciones { display: grid; gap: 6px; }
+.meses { grid-template-columns: repeat(4, 1fr); }
+.opciones button { font: inherit; font-size: .84rem; padding: 8px 6px; border-radius: 8px; border: 1px solid var(--borde);
+  background: var(--panel-2); color: var(--text-secondary); cursor: pointer; }
+.opciones button:hover { color: var(--text-primary); border-color: var(--text-muted); }
+.opciones button[aria-pressed=true] { background: var(--acento); border-color: var(--acento); color: #fff; font-weight: 600; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.nota { font-size: .78rem; color: var(--text-muted); margin: 0; }
+.tablero { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; min-width: 0; }
+.kpi { grid-column: span 3; }
+.kpi .num { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi .txt { color: var(--text-secondary); font-size: .82rem; }
+.kpi.principal { border-color: var(--acento); }
+.chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 8px; vertical-align: 2px; }
+.c5 { grid-column: span 5; } .c7 { grid-column: span 7; } .c12 { grid-column: span 12; }
+.sub { color: var(--text-secondary); font-size: .84rem; margin: -4px 0 10px; }
+.fila { display: grid; grid-template-columns: 58px 1fr 62px; align-items: center; gap: 10px; margin: 14px 0; font-variant-numeric: tabular-nums; }
+.pista { height: 34px; background: var(--panel-2); border-radius: 6px; overflow: hidden; }
+.pista div { height: 100%; border-radius: 0 6px 6px 0; transition: width .3s; }
+.fila span:last-child { text-align: right; font-weight: 700; font-size: 1.05rem; }
+.est { display: grid; grid-template-columns: 104px 1fr 96px; align-items: center; gap: 10px; margin: 10px 0; padding: 4px 6px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; font-size: .88rem; }
+.est:hover { background: var(--panel-2); }
+.est[aria-pressed=true] { border-color: var(--marca); }
+.est .tira { display: flex; height: 22px; border-radius: 5px; overflow: hidden; gap: 2px; }
+.est .tira div { height: 100%; transition: width .3s; }
+.est small { color: var(--text-secondary); text-align: right; }
+svg { width: 100%; height: auto; display: block; }
+svg text { fill: var(--text-secondary); font-size: 11px; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .8rem; color: var(--text-secondary); margin-bottom: 6px; }
+.leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; }
+details { font-size: .86rem; color: var(--text-secondary); }
+summary { cursor: pointer; color: var(--text-primary); font-weight: 600; }
+table { border-collapse: collapse; width: 100%; font-size: .85rem; font-variant-numeric: tabular-nums; margin-top: 8px; }
 th, td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--borde); }
 th:first-child, td:first-child { text-align: left; }
-th { color: var(--text-secondary); font-weight: 600; }
-svg { width: 100%; height: auto; display: block; }
-svg text { fill: var(--text-secondary); font-size: 12px; }
-.leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .85rem; color: var(--text-secondary); margin-bottom: 6px; }
-.leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
-#tip { position: fixed; pointer-events: none; background: var(--text-primary); color: var(--surface-1);
-  padding: 6px 9px; border-radius: 6px; font-size: .82rem; display: none; z-index: 5; }
-footer { margin-top: 28px; color: var(--text-muted); font-size: .85rem; }
-a { color: var(--series-1); }
+th { color: var(--text-muted); font-weight: 600; }
+#tip { position: fixed; pointer-events: none; background: var(--text-primary); color: var(--fondo); padding: 6px 9px; border-radius: 6px; font-size: .8rem; display: none; z-index: 5; }
+a { color: var(--acento); }
+@media (max-width: 1000px) {
+  .app { grid-template-columns: 1fr; } .lado { position: static; }
+  .kpi { grid-column: span 6; } .c5, .c7 { grid-column: span 12; }
+}
+@media (max-width: 520px) { .kpi { grid-column: span 12; } .barra span { display: none; } }
 </style>
 </head>
 <body>
-<main>
-<header>
-  <div class="etiqueta">Proyecto final · Minería de Datos · Universidad Libre</div>
-  <h1>¿Qué tan fuerte sopla el viento en Medellín?</h1>
-  <p>Escoge una hora, un mes y una estación. El modelo Naive Bayes calcula qué tan probable es que el viento
-  esté bajo, medio o alto, y las gráficas se actualizan con cada cambio.</p>
-</header>
-
-<div class="card">
-  <div class="form">
-    <div><label for="hora">Hora del día</label><select id="hora"></select></div>
-    <div><label for="mes">Mes</label><select id="mes"></select></div>
-    <div><label for="estacion">Estación</label><select id="estacion"></select></div>
-  </div>
+<div class="barra">
+  <h1>Predicción del viento en Medellín · Naive Bayes</h1>
+  <span>Proyecto final · Minería de Datos · Universidad Libre</span>
 </div>
 
-<div class="card">
-  <p class="resultado" id="resultado"></p>
-  <div id="barras"></div>
-  <details><summary>Ver cómo se calcula</summary><div id="calculo"></div></details>
-</div>
+<div class="app">
+  <aside class="panel lado">
+    <h2>Valores de entrada</h2>
+    <div class="campo">
+      <label for="hora">Hora del día <b id="hora-txt"></b></label>
+      <input type="range" id="hora" min="0" max="23" step="1" value="15">
+    </div>
+    <div class="campo">
+      <label>Mes <b id="mes-txt"></b></label>
+      <div class="opciones meses" id="meses"></div>
+    </div>
+    <div class="campo">
+      <label>Estación <b></b></label>
+      <div class="opciones" id="estaciones"></div>
+    </div>
+    <p class="nota">Niveles según la escala de Beaufort: bajo hasta 1,5 m/s, medio hasta 3,3 m/s y alto por encima de 3,3 m/s.</p>
+  </aside>
 
-<div class="grid2">
-  <div class="card"><h2>Predicción durante el día</h2><p class="sub" id="sub-hora"></p><div id="g-hora"></div></div>
-  <div class="card"><h2>Predicción durante el año</h2><p class="sub" id="sub-mes"></p><div id="g-mes"></div></div>
-</div>
+  <main class="tablero">
+    <div class="panel kpi principal"><h2>Predicción</h2><div class="num" id="k-nivel"></div><div class="txt">nivel de viento más probable</div></div>
+    <div class="panel kpi"><h2>Probabilidad</h2><div class="num" id="k-prob"></div><div class="txt" id="k-prob-txt"></div></div>
+    <div class="panel kpi"><h2>Velocidad típica</h2><div class="num" id="k-vel"></div><div class="txt" id="k-vel-txt"></div></div>
+    <div class="panel kpi"><h2>Precisión del modelo</h2><div class="num" id="k-prec"></div><div class="txt" id="k-prec-txt"></div></div>
 
-<footer>Niveles según la escala de Beaufort: bajo hasta 1,5 m/s, medio hasta 3,3 m/s y alto por encima de 3,3 m/s.
-Datos: <a href="https://www.datos.gov.co/Ambiente-y-Desarrollo-Sostenible/Velocidad-del-Viento/sgfv-3yp8">Velocidad del Viento, datos.gov.co</a>.
-Código: <a href="https://github.com/devHarlemHM/NAIVE_BAYES_VIENTO">repositorio en GitHub</a>.</footer>
-</main>
+    <div class="panel c5"><h2>Probabilidad de cada nivel</h2><p class="sub" id="sub-prob"></p><div id="barras"></div></div>
+    <div class="panel c7"><h2>Mapa de predicción: hora y mes</h2><p class="sub" id="sub-mapa"></p><div id="mapa"></div></div>
+
+    <div class="panel c7"><h2>Predicción durante el día</h2><p class="sub" id="sub-dia"></p><div id="dia"></div></div>
+    <div class="panel c5"><h2>Misma hora en las otras estaciones</h2><p class="sub" id="sub-est"></p><div id="comparar"></div></div>
+
+    <div class="panel c12">
+      <details><summary>Ver cómo calcula Naive Bayes esta predicción</summary><div id="calculo"></div></details>
+      <p class="nota" style="margin-top:10px">Datos: <a href="https://www.datos.gov.co/Ambiente-y-Desarrollo-Sostenible/Velocidad-del-Viento/sgfv-3yp8">Velocidad del Viento, datos.gov.co</a>.
+      Código: <a href="https://github.com/devHarlemHM/NAIVE_BAYES_VIENTO">repositorio en GitHub</a>. Harlem Hernández y Juan Camilo De Hoyos.</p>
+    </div>
+  </main>
+</div>
 <div id="tip"></div>
 
 <script src="modelo.js"></script>
@@ -106,6 +137,7 @@ const pct = (x, d = 1) => num(x * 100, d) + " %";
 const nombre = s => s.charAt(0) + s.slice(1).toLowerCase().replace(/ (.)/g, (m, c) => " " + c.toUpperCase());
 const $ = id => document.getElementById(id);
 const tip = $("tip");
+const estado = { h: 15, m: 7, e: 0 };
 
 /* Naive Bayes: P(nivel) x P(hora|nivel) x P(mes|nivel) x P(estación|nivel), y se divide entre la suma */
 function predecir(h, m, e) {
@@ -116,7 +148,8 @@ function predecir(h, m, e) {
   });
   const total = NIVELES.reduce((a, c) => a + crudo[c], 0);
   const prob = {}; NIVELES.forEach(c => prob[c] = crudo[c] / total);
-  return { prob, partes, crudo };
+  const mejor = NIVELES.reduce((a, b) => prob[a] >= prob[b] ? a : b);
+  return { prob, partes, mejor };
 }
 
 function svg(tag, attrs, padre) {
@@ -125,70 +158,117 @@ function svg(tag, attrs, padre) {
   if (padre) padre.appendChild(n);
   return n;
 }
+function conTip(nodo, html) {
+  nodo.addEventListener("mousemove", ev => {
+    tip.innerHTML = html; tip.style.display = "block";
+    tip.style.left = Math.min(ev.clientX + 12, innerWidth - 160) + "px"; tip.style.top = (ev.clientY + 14) + "px";
+  });
+  nodo.addEventListener("mouseleave", () => tip.style.display = "none");
+}
+function leyenda(caja) {
+  const d = document.createElement("div"); d.className = "leyenda";
+  d.innerHTML = NIVELES.map(n => `<span><i style="background:${COLOR[n]}"></i>${nombre(n)}</span>`).join("");
+  caja.appendChild(d);
+}
+const detalle = p => NIVELES.map(n => `${nombre(n)}: ${pct(p[n])}`).join("<br>");
 
-/* Barras apiladas al 100 %: una por hora o por mes, con la seleccionada marcada */
-function apiladas(cont, datos, etiquetas, elegido, cada, alElegir) {
-  const W = 520, H = 250, IZQ = 44, DER = 8, ARR = 22, ABA = 26;
-  const caja = $(cont); caja.innerHTML = "";
-  const ley = document.createElement("div"); ley.className = "leyenda";
-  ley.innerHTML = NIVELES.map(n => `<span><i style="background:${COLOR[n]}"></i>${nombre(n)}</span>`).join("");
-  caja.appendChild(ley);
+/* Mapa: una celda por cada hora y mes, pintada con el nivel que predice el modelo */
+function mapa() {
+  const caja = $("mapa"); caja.innerHTML = ""; leyenda(caja);
+  const W = 640, IZQ = 34, ARR = 4, ALTO = 19, ancho = (W - IZQ) / 24, H = ARR + 12 * ALTO + 20;
   const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, caja);
-  const y = v => ARR + (H - ARR - ABA) * (1 - v);
+  let marca;
+  for (let m = 0; m < 12; m++) {
+    svg("text", { x: IZQ - 6, y: ARR + m * ALTO + 13, "text-anchor": "end", "font-weight": m === estado.m ? 700 : 400 }, s).textContent = MESES[m].slice(0, 3);
+    for (let h = 0; h < 24; h++) {
+      const r = predecir(h, m, estado.e);
+      const c = svg("rect", { x: IZQ + h * ancho + 1, y: ARR + m * ALTO + 1, width: ancho - 2, height: ALTO - 2, rx: 2,
+        fill: COLOR[r.mejor], style: "cursor:pointer" }, s);
+      conTip(c, `<b>${MESES[m]}, ${h}:00</b><br>Predice ${nombre(r.mejor)}<br>${detalle(r.prob)}`);
+      c.addEventListener("click", () => { tip.style.display = "none"; estado.h = h; estado.m = m; pintar(); });
+      if (h === estado.h && m === estado.m) marca = [IZQ + h * ancho, ARR + m * ALTO];
+    }
+  }
+  for (let h = 0; h < 24; h += 3) svg("text", { x: IZQ + h * ancho + ancho / 2, y: H - 5, "text-anchor": "middle" }, s).textContent = h + "h";
+  svg("rect", { x: marca[0] - 1, y: marca[1] - 1, width: ancho + 2, height: ALTO + 2, rx: 3, fill: "none", stroke: "var(--marca)", "stroke-width": 2.5, "pointer-events": "none" }, s);
+}
+
+/* Barras apiladas al 100 % para las 24 horas, con la hora elegida marcada */
+function dia() {
+  const caja = $("dia"); caja.innerHTML = ""; leyenda(caja);
+  const W = 640, H = 230, IZQ = 40, DER = 6, ARR = 18, ABA = 22;
+  const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" }, caja);
+  const y = v => ARR + (H - ARR - ABA) * (1 - v), sep = (W - IZQ - DER) / 24;
   for (let i = 0; i <= 4; i++) {
     svg("line", { x1: IZQ, x2: W - DER, y1: y(i / 4), y2: y(i / 4), stroke: "var(--grid)" }, s);
     svg("text", { x: IZQ - 6, y: y(i / 4) + 4, "text-anchor": "end" }, s).textContent = i * 25 + " %";
   }
-  const sep = (W - IZQ - DER) / datos.length;
-  datos.forEach((p, i) => {
-    let base = 0;
+  for (let h = 0; h < 24; h++) {
+    const p = predecir(h, estado.m, estado.e).prob; let base = 0;
     NIVELES.forEach(n => {
-      svg("rect", { x: IZQ + i * sep + 1, y: y(base + p[n]) + 1, width: sep - 2, height: Math.max(y(base) - y(base + p[n]) - 2, 0),
-        fill: COLOR[n], opacity: i === elegido ? 1 : 0.55 }, s);
+      svg("rect", { x: IZQ + h * sep + 1, y: y(base + p[n]) + 1, width: sep - 2, height: Math.max(y(base) - y(base + p[n]) - 2, 0),
+        fill: COLOR[n], opacity: h === estado.h ? 1 : 0.5 }, s);
       base += p[n];
     });
-    if (i % cada === 0 || i === elegido) svg("text", { x: IZQ + i * sep + sep / 2, y: H - 8, "text-anchor": "middle",
-      "font-weight": i === elegido ? 700 : 400 }, s).textContent = etiquetas[i];
-    if (i === elegido) {
-      svg("rect", { x: IZQ + i * sep, y: y(1) - 1, width: sep, height: y(0) - y(1) + 2, fill: "none", stroke: "var(--marca)", "stroke-width": 2, rx: 2 }, s);
-      svg("path", { d: `M${IZQ + i * sep + sep / 2 - 5},${ARR - 12} l10,0 l-5,7 z`, fill: "var(--marca)" }, s);
+    if (h % 3 === 0 || h === estado.h) svg("text", { x: IZQ + h * sep + sep / 2, y: H - 6, "text-anchor": "middle", "font-weight": h === estado.h ? 700 : 400 }, s).textContent = h + "h";
+    if (h === estado.h) {
+      svg("rect", { x: IZQ + h * sep, y: y(1) - 1, width: sep, height: y(0) - y(1) + 2, fill: "none", stroke: "var(--marca)", "stroke-width": 2, rx: 2 }, s);
+      svg("path", { d: `M${IZQ + h * sep + sep / 2 - 5},${ARR - 11} l10,0 l-5,7 z`, fill: "var(--marca)" }, s);
     }
-    const z = svg("rect", { x: IZQ + i * sep, y: ARR, width: sep, height: H - ARR - ABA, fill: "transparent", style: "cursor:pointer" }, s);
-    z.addEventListener("mousemove", ev => {
-      tip.innerHTML = `<b>${etiquetas[i]}</b><br>` + NIVELES.map(n => `${nombre(n)}: ${pct(p[n])}`).join("<br>");
-      tip.style.display = "block"; tip.style.left = Math.min(ev.clientX + 12, innerWidth - 150) + "px"; tip.style.top = (ev.clientY + 14) + "px";
-    });
-    z.addEventListener("mouseleave", () => tip.style.display = "none");
-    z.addEventListener("click", () => { tip.style.display = "none"; alElegir(i); });
-  });
+    const z = svg("rect", { x: IZQ + h * sep, y: ARR, width: sep, height: H - ARR - ABA, fill: "transparent", style: "cursor:pointer" }, s);
+    conTip(z, `<b>${h}:00</b><br>${detalle(p)}`);
+    z.addEventListener("click", () => { tip.style.display = "none"; estado.h = h; pintar(); });
+  }
 }
 
-function actualizar() {
-  const h = +$("hora").value, m = +$("mes").value, e = +$("estacion").value;
-  const r = predecir(h, m, e);
-  const mejor = NIVELES.reduce((a, b) => r.prob[a] >= r.prob[b] ? a : b);
-  $("resultado").innerHTML = `Nivel de viento más probable: <b>${nombre(mejor)}</b> (${pct(r.prob[mejor])})`;
+function pintar() {
+  const { h, m, e } = estado, r = predecir(h, m, e), est = nombre(M.estaciones[e]);
+  $("hora").value = h; $("hora-txt").textContent = h + ":00"; $("mes-txt").textContent = MESES[m];
+  document.querySelectorAll("#meses button").forEach((b, i) => b.setAttribute("aria-pressed", i === m));
+  document.querySelectorAll("#estaciones button").forEach((b, i) => b.setAttribute("aria-pressed", i === e));
+
+  const orden = [...NIVELES].sort((a, b) => r.prob[b] - r.prob[a]);
+  $("k-nivel").innerHTML = `<span class="chip" style="background:${COLOR[r.mejor]}"></span>${nombre(r.mejor)}`;
+  $("k-prob").textContent = pct(r.prob[r.mejor]);
+  $("k-prob-txt").textContent = `le sigue ${nombre(orden[1])} con ${pct(r.prob[orden[1]])}`;
+  $("k-vel").textContent = num(M.hora_estacion[M.estaciones[e]][h], 2) + " m/s";
+  $("k-vel-txt").textContent = `promedio medido a las ${h}:00 en ${est}`;
+  $("k-prec").textContent = pct(M.exactitud);
+  $("k-prec-txt").textContent = `en ${num(M.prueba)} mediciones de prueba`;
+
+  $("sub-prob").textContent = `${h}:00 de ${MESES[m].toLowerCase()} en ${est}`;
   $("barras").innerHTML = NIVELES.map(c => `<div class="fila"><span>${nombre(c)}</span>
     <div class="pista"><div style="width:${r.prob[c] * 100}%;background:${COLOR[c]}"></div></div><span>${pct(r.prob[c])}</span></div>`).join("");
-  $("calculo").innerHTML = `<p>Naive Bayes multiplica la probabilidad de cada nivel por la probabilidad de ver esa hora,
-    ese mes y esa estación cuando el viento está en ese nivel. Después divide entre la suma para que todo dé 100 %.</p>
+
+  $("sub-mapa").textContent = `Nivel que predice el modelo en ${est} para cada hora y mes. Toca una celda para elegirla.`;
+  $("sub-dia").textContent = `${MESES[m]} en ${est}. Toca una hora para elegirla.`;
+  $("sub-est").textContent = `${h}:00 de ${MESES[m].toLowerCase()}. Toca una estación para elegirla.`;
+  mapa(); dia();
+
+  $("comparar").innerHTML = "";
+  M.estaciones.forEach((n, i) => {
+    const p = predecir(h, m, i), f = document.createElement("div");
+    f.className = "est"; f.setAttribute("role", "button"); f.setAttribute("tabindex", 0); f.setAttribute("aria-pressed", i === e);
+    f.innerHTML = `<span>${nombre(n)}</span><div class="tira">${NIVELES.map(c => `<div style="width:${p.prob[c] * 100}%;background:${COLOR[c]}"></div>`).join("")}</div>
+      <small>${nombre(p.mejor)} ${pct(p.prob[p.mejor], 0)}</small>`;
+    conTip(f, `<b>${nombre(n)}</b><br>${detalle(p.prob)}`);
+    const elegir = () => { tip.style.display = "none"; estado.e = i; pintar(); };
+    f.addEventListener("click", elegir); f.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); elegir(); } });
+    $("comparar").appendChild(f);
+  });
+
+  $("calculo").innerHTML = `<p>El modelo multiplica la probabilidad de cada nivel por la probabilidad de ver esa hora, ese mes y esa estación
+    cuando el viento está en ese nivel. Después divide entre la suma para que todo dé 100 %.</p>
     <table><tr><th>Nivel</th><th>P(nivel)</th><th>P(hora | nivel)</th><th>P(mes | nivel)</th><th>P(estación | nivel)</th><th>Probabilidad</th></tr>` +
     NIVELES.map(c => `<tr><td>${nombre(c)}</td>${r.partes[c].map(p => `<td>${num(p, 4)}</td>`).join("")}<td>${pct(r.prob[c])}</td></tr>`).join("") + "</table>";
-
-  const est = nombre(M.estaciones[e]);
-  $("sub-hora").textContent = `${MESES[m]} en ${est}. Toca una hora para elegirla.`;
-  $("sub-mes").textContent = `A las ${h}:00 en ${est}. Toca un mes para elegirlo.`;
-  apiladas("g-hora", [...Array(24)].map((_, i) => predecir(i, m, e).prob), [...Array(24)].map((_, i) => i + "h"), h, 3,
-    i => { $("hora").value = i; actualizar(); });
-  apiladas("g-mes", MESES.map((_, i) => predecir(h, i, e).prob), MESES.map(x => x.slice(0, 3)), m, 1,
-    i => { $("mes").value = i; actualizar(); });
 }
 
-for (let h = 0; h < 24; h++) $("hora").add(new Option(h + ":00", h, false, h === 15));
-MESES.forEach((m, i) => $("mes").add(new Option(m, i, false, i === 7)));
-M.estaciones.forEach((e, i) => $("estacion").add(new Option(nombre(e), i)));
-["hora", "mes", "estacion"].forEach(id => $(id).addEventListener("change", actualizar));
-actualizar();
+MESES.forEach((n, i) => { const b = document.createElement("button"); b.type = "button"; b.textContent = n.slice(0, 3); b.title = n;
+  b.addEventListener("click", () => { estado.m = i; pintar(); }); $("meses").appendChild(b); });
+M.estaciones.forEach((n, i) => { const b = document.createElement("button"); b.type = "button"; b.textContent = nombre(n);
+  b.addEventListener("click", () => { estado.e = i; pintar(); }); $("estaciones").appendChild(b); });
+$("hora").addEventListener("input", ev => { estado.h = +ev.target.value; pintar(); });
+pintar();
 </script>
 </body>
 </html>
